@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="stylesheet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="img/Logo.PNG" alt="Company Logo">
+      </div>
+      <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="consumption.html" class="active">Consumption</a>
+        <a href="conservation.html">Conservation</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search...">
+          <i class="fas fa-search"></i> <!-- Optional search icon -->
+        </div>
+        <div class="user-profile">
+          <span class="user-name">Nokuhle</span>
+          <img src="img/person.png" alt="User" class="user-icon">
+        </div>
+      </div>
+
+      <div class="content-area">
+  <h1 class="chart-heading">Detailed Chart</h1>
+  
+  <div class="chart-filters">
+    <button class="filter-btn active" data-period="day">Day</button>
+    <button class="filter-btn" data-period="week">Week</button>
+    <button class="filter-btn" data-period="month">Month</button>
+    <button class="filter-btn" data-period="year">Year</button>
+  </div>
+  
+  <div class="chart-container">
+    <canvas id="waterUsageChart"></canvas>
+  </div>
+  
+  <div class="water-stats">
+    <div class="stat-card main-stat">
+      <h3>Total Water Usage</h3>
+      <p class="stat-value" id="total-usage">0</p>
+      <p class="stat-unit">liters</p>
+      <div class="usage-breakdown">
+        <div class="breakdown-item shower">
+          <span class="breakdown-label">Shower</span>
+          <span class="breakdown-value" id="shower-usage">0L</span>
+        </div>
+        <div class="breakdown-item kitchen">
+          <span class="breakdown-label">Kitchen</span>
+          <span class="breakdown-value" id="kitchen-usage">0L</span>
+        </div>
+        <div class="breakdown-item garden">
+          <span class="breakdown-label">Garden</span>
+          <span class="breakdown-value" id="garden-usage">0L</span>
+        </div>
+        <div class="breakdown-item other">
+          <span class="breakdown-label">Other</span>
+          <span class="breakdown-value" id="other-usage">0L</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="pie-chart-container">
+        <canvas id="usagePieChart"></canvas>
+      </div>
+      <div class="pie-legend" id="pieLegend"></div>
+    </div>
+    
+    <div class="stat-card efficiency-card">
+      <h3>Water Efficiency</h3>
+      <div class="efficiency-meter">
+        <div class="meter-bar" id="efficiency-bar"></div>
+        <span class="meter-value" id="efficiency-value">75%</span>
+      </div>
+      <p class="efficiency-tip" id="efficiency-tip">Good job! You're using less water than 65% of similar households.</p>
+    </div>
+  </div>
+</div>
+
+
+    </main>
+  </div>
+  <script src="consumption-interactivity.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="stylesheet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+<script>
+  // Same Firebase config as other pages
+  const firebaseConfig = {
+    apiKey: "AIzaSyDCQo2LgeocOMZFtfh8d-y7sXxgLavshsY",
+    authDomain: "smartmanagementsystem-a2a2b.firebaseapp.com",
+    projectId: "smartmanagementsystem-a2a2b",
+    storageBucket: "smartmanagementsystem-a2a2b.firebasestorage.app",
+    messagingSenderId: "637822761779",
+    appId: "1:637822761779:web:0bf46abcecc3b6d7361c46",
+    measurementId: "G-BH6CHVNJND"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // Add authentication check
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      loadUserData(user.uid);
+    }
+  });
+
+  async function loadUserData(uid) {
+    const doc = await db.collection('users').doc(uid).get();
+    if (doc.exists) {
+      const userData = doc.data();
+      // Update UI with user data
+      document.querySelector('.user-name').textContent = userData.name;
+      document.querySelector('.user-highlight').textContent = userData.name;
+    }
+  }
+
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "login.html";
+    });
+  }
+</script>
+</head>
+<body>
+  <script>
+  function openModal(id) {
+    document.getElementById(id).style.display = "flex";
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+  }
+
+  function submitLeakage() {
+    alert("Leakage report submitted!");
+    closeModal('leakageModal');
+  }
+
+  function submitGoal() {
+    alert("New goal set successfully!");
+    closeModal('goalModal');
+  }
+</script>
+
+  <div class="container">
+    <!--This is the sidebar-->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="img/Logo.PNG" alt="Company Logo">
+      </div>
+      <nav class="nav-links">
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="consumption.html">Consumption</a>
+        <a href="conservation.html">Conservation</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search...">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="user-profile">
+          <span class="user-name">Nokuhle</span>
+          <img src="img/person.png" alt="User" class="user-icon">
+        </div>
+      </div>
+
+      <div class="content-area">
+
+        <div class="dashboard-header">
+          <h1>Hello, <span class="user-highlight">Nokuhle</span></h1>
+          <h2>Tracked Usage</h2>
+        </div>
+
+        <div class="cards-container">
+          <!-- Card 1: Today's Usage -->
+          <div class="dashboard-card">
+            <h2 style="color: #0399FE;">Today's Usage</h2>
+            <div class="card-content">
+              <p class="big-number">45L</p>
+              <div class="hover-info">
+                <p>Today's household water consumption including all taps, showers, and appliances.</p>
+                <ul class="usage-details">
+                  <li>🛁 Showers: 18L</li>
+                  <li>🚰 Taps: 12L</li>
+                  <li>🧺 Washing: 15L</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Usage Difference -->
+          <div class="dashboard-card">
+            <h2 style="color: #0399FE;">Usage Difference</h2>
+            <div class="card-content">
+              <p class="big-number">25% more</p>
+              <div class="hover-info">
+                <p>Compared to yesterday's usage of 36L. Potential reasons for increase:</p>
+                <ul class="usage-details">
+                  <li>⏱️ Longer shower times</li>
+                  <li>👕 Extra laundry loads</li>
+                  <li>💧 Possible leak in kitchen</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Daily Goal -->
+          <div class="dashboard-card">
+            <h2 style="color: #0399FE;">Daily Goal</h2>
+            <div class="card-content">
+              <div class="progress-circle" data-progress="60">
+                <svg class="progress-ring" height="100" width="100">
+                  <circle class="progress-ring-circle" stroke="#E0E0E0" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"/>
+                  <circle class="progress-ring-circle progress-ring-complete" stroke="#0399FE" stroke-width="8" fill="transparent" r="40" cx="50" cy="50"/>
+                </svg>
+                <span class="progress-text">60%</span>
+              </div>
+              <div class="hover-info">
+                <p>Daily goal: 75L (60% used)</p>
+                <ul class="usage-details">
+                  <li>✅ 45L used today</li>
+                  <li>🔄 30L remaining</li>
+                  <li>⏳ On track to exceed by 15%</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-actions">
+          <button class="action-btn report-btn" onclick="openModal('leakageModal')">
+            <i class="fas fa-tint"></i> Report Leakage
+          </button>
+          <button class="action-btn goal-btn" onclick="openModal('goalModal')">
+            <i class="fas fa-bullseye"></i> Set Goal
+          </button>
+        </div>
+
+        <div class="weekly-usage-section">
+          <div class="section-header">
+            <h2>Weekly Usage</h2>
+            <div class="view-options">
+              <button class="view-option active" data-view="liters">Liters</button>
+              <button class="view-option" data-view="cost">Cost</button>
+              <button class="view-option" data-view="comparison">Comparison</button>
+            </div>
+          </div>
+          <div class="graph-container">
+            <canvas id="weeklyUsageChart"></canvas>
+          </div>
+          <div class="usage-breakdown">
+            <div class="breakdown-item">
+              <span class="breakdown-label">Shower</span>
+              <span class="breakdown-bar"><span class="fill" style="width: 38%; background-color: #3498db;"></span></span>
+              <span class="breakdown-value">38%</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Kitchen</span>
+              <span class="breakdown-bar"><span class="fill" style="width: 25%; background-color: #2ecc71;"></span></span>
+              <span class="breakdown-value">25%</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Laundry</span>
+              <span class="breakdown-bar"><span class="fill" style="width: 22%; background-color: #f1c40f;"></span></span>
+              <span class="breakdown-value">22%</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Other</span>
+              <span class="breakdown-bar"><span class="fill" style="width: 15%; background-color: #e74c3c;"></span></span>
+              <span class="breakdown-value">15%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Leakage Modal -->
+  <div id="leakageModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('leakageModal')">&times;</span>
+      <h3>Report Leakage</h3>
+      <label>Location:</label>
+      <input type="text" placeholder="e.g. Kitchen Sink" />
+      <label>Severity:</label>
+      <select>
+        <option>Mild</option>
+        <option>Moderate</option>
+        <option>Severe</option>
+      </select>
+      <label>Additional Notes:</label>
+      <textarea placeholder="Describe the leakage..."></textarea>
+      <button onclick="submitLeakage()">Submit Report</button>
+    </div>
+  </div>
+
+  <!-- Goal Modal -->
+  <div id="goalModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('goalModal')">&times;</span>
+      <h3>Set Daily Goal</h3>
+      <label>New Daily Goal (Litres):</label>
+      <input type="number" placeholder="e.g. 60" />
+      <label>Effective From:</label>
+      <input type="date" />
+      <button onclick="submitGoal()">Set Goal</button>
+    </div>
+  </div>
+
+  <script src="dashboard-interactivity.js"></script>
+</body>
+</html>

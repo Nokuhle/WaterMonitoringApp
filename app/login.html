@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="stylesheet.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="form-section">
+      <h1>Hello, New Friend</h1>
+      <p class="slogan">Login to continue</p>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="input-group">
+          <img src="img/email-account.png" class="icon">
+          <input type="email" id="loginEmail" placeholder="Email Address" required />
+        </div>
+        <div class="input-group">
+          <img src="img/padlock.png" class="icon">
+          <input type="password" id="loginPassword" placeholder="Password" required />
+        </div>
+
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <div class="info-section">
+      <img src="img/Logo.PNG" alt="Logo" class="logo" />
+      <h2>New Here?</h2>
+      <p class="slogan">Sign up and start your journey</p>
+      <a href="signup.html" class="switch-btn">Create Account</a>
+    </div>
+  </div>
+  <script>
+  function redirectToDashboard(event) {
+    event.preventDefault();
+    window.location.href = "dashboard.html";
+     }
+     // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDCQo2LgeocOMZFtfh8d-y7sXxgLavshsY",
+    authDomain: "smartmanagementsystem-a2a2b.firebaseapp.com",
+    projectId: "smartmanagementsystem-a2a2b",
+    storageBucket: "smartmanagementsystem-a2a2b.firebasestorage.app",
+    messagingSenderId: "637822761779",
+    appId: "1:637822761779:web:0bf46abcecc3b6d7361c46",
+    measurementId: "G-BH6CHVNJND"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  // Initialize Firebase services
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  async function handleLogin(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+    window.location.href = "dashboard.html";
+  } catch (error) {
+    console.error("Error logging in:", error);
+    alert(error.message);
+  }
+}
+
+
+     
+</script>
+
+</body>
+</html>

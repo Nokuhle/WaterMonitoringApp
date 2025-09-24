@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="stylesheet.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="img/Logo.PNG" alt="Company Logo">
+      </div>
+      <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="consumption.html">Consumption</a>
+        <a href="conservation.html" class="active">Conservation</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search...">
+          <i class="fas fa-search"></i> <!-- Optional search icon -->
+        </div>
+        <div class="user-profile">
+          <span class="user-name">Nokuhle</span>
+          <img src="img/person.png" alt="User" class="user-icon">
+        </div>
+      </div>
+
+      <div class="content-area conservation-page">
+  <div class="conservation-header">
+    <h1>Conservation Tips</h1>
+    <p class="subheading">Small changes save thousands of liters!</p>
+    <div class="water-drop-animation">
+      <div class="drop"></div>
+      <div class="wave"></div>
+    </div>
+  </div>
+  
+  <div class="personalized-tip-card">
+    <div class="tip-header">
+      <div class="tip-icon">💧</div>
+      <h2>Your Personalized Water Saving Tip</h2>
+    </div>
+    <div class="tip-content" id="personalized-tip">
+      Based on your usage, we recommend focusing on shorter showers. Cutting just 2 minutes could save <strong>5,700 liters annually</strong>!
+    </div>
+    <div class="savings-badge" id="savings-potential">
+      Potential Savings: 12%
+    </div>
+  </div>
+  
+  <div class="conservation-categories">
+    <div class="category-card bathroom">
+      <div class="category-header">
+        <div class="category-icon">🚿</div>
+        <h3>Bathroom Savings</h3>
+      </div>
+      <ul class="tip-list">
+        <li>Install low-flow showerheads (save 11,000L/year)</li>
+        <li>Turn off tap while brushing (save 5,700L/year)</li>
+        <li>Fix leaks immediately (save 35,000L/year)</li>
+      </ul>
+      <button class="action-btn">View All Bathroom Tips</button>
+    </div>
+    
+    <div class="category-card kitchen">
+      <div class="category-header">
+        <div class="category-icon">🍽️</div>
+        <h3>Kitchen Savings</h3>
+      </div>
+      <ul class="tip-list">
+        <li>Only run full dishwasher loads (save 3,800L/year)</li>
+        <li>Use a bowl for washing produce (save 1,400L/year)</li>
+        <li>Defrost food in fridge not water (save 250L/year)</li>
+      </ul>
+      <button class="action-btn">View All Kitchen Tips</button>
+    </div>
+    
+    <div class="category-card outdoor">
+      <div class="category-header">
+        <div class="category-icon">🌱</div>
+        <h3>Outdoor Savings</h3>
+      </div>
+      <ul class="tip-list">
+        <li>Water plants early morning (save 9,000L/year)</li>
+        <li>Install rain barrels (save 30,000L/year)</li>
+        <li>Use drip irrigation (save 15,000L/year)</li>
+      </ul>
+      <button class="action-btn">View All Outdoor Tips</button>
+    </div>
+  </div>
+  
+  <div class="emergency-alert" id="emergency-alert">
+    <div class="alert-header">
+      <div class="alert-icon">⚠️</div>
+      <h3>High Usage Alert!</h3>
+      <div class="alert-close">&times;</div>
+    </div>
+    <div class="alert-content">
+      <p>Your water usage is <strong>35% higher</strong> than similar households this week. Your shower duration increased by 8 minutes daily.</p>
+      <div class="alert-actions">
+        <button class="alert-btn primary">See Recommendations</button>
+        <button class="alert-btn secondary">Dismiss</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="water-facts-carousel">
+    <div class="fact-card">
+      <p>A dripping faucet can waste <strong>75 liters</strong> of water per day!</p>
+    </div>
+    <div class="fact-card">
+      <p>Turning off the tap while brushing teeth saves <strong>18 liters</strong> per brush!</p>
+    </div>
+    <div class="fact-card">
+      <p>Full laundry loads use <strong>40% less</strong> water than multiple small loads!</p>
+    </div>
+  </div>
+</div>
+    </main>
+
+
+  </div>
+
+  <script src="conservation-interactivity.js"></script>
+</body>
+</html>
