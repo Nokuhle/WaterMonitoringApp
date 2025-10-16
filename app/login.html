@@ -26,6 +26,9 @@
         </div>
 
         <button type="submit">Login</button>
+        
+        <!-- Error message display -->
+        <div id="errorMessage" style="color: red; margin-top: 10px; display: none;"></div>
       </form>
     </div>
 
@@ -36,47 +39,97 @@
       <a href="signup.html" class="switch-btn">Create Account</a>
     </div>
   </div>
+  
   <script>
-  function redirectToDashboard(event) {
-    event.preventDefault();
-    window.location.href = "dashboard.html";
-     }
-     // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDCQo2LgeocOMZFtfh8d-y7sXxgLavshsY",
-    authDomain: "smartmanagementsystem-a2a2b.firebaseapp.com",
-    projectId: "smartmanagementsystem-a2a2b",
-    storageBucket: "smartmanagementsystem-a2a2b.firebasestorage.app",
-    messagingSenderId: "637822761779",
-    appId: "1:637822761779:web:0bf46abcecc3b6d7361c46",
-    measurementId: "G-BH6CHVNJND"
-  };
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDCQo2LgeocOMZFtfh8d-y7sXxgLavshsY",
+      authDomain: "smartmanagementsystem-a2a2b.firebaseapp.com",
+      projectId: "smartmanagementsystem-a2a2b",
+      storageBucket: "smartmanagementsystem-a2a2b.firebasestorage.app",
+      messagingSenderId: "637822761779",
+      appId: "1:637822761779:web:0bf46abcecc3b6d7361c46",
+      measurementId: "G-BH6CHVNJND"
+    };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  
-  // Initialize Firebase services
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Firebase services
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-  async function handleLogin(event) {
-  event.preventDefault();
-  
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  
-  try {
-    await auth.signInWithEmailAndPassword(email, password);
-    window.location.href = "dashboard.html";
-  } catch (error) {
-    console.error("Error logging in:", error);
-    alert(error.message);
-  }
-}
+    async function handleLogin(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const errorElement = document.getElementById('errorMessage');
+      
+      // Reset error message
+      errorElement.style.display = 'none';
+      errorElement.textContent = '';
+      
+      try {
+        // Sign in with Firebase Authentication
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+        
+        // Fetch user data from Firestore
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          
+          // Store user data in localStorage for persistence
+          localStorage.setItem('currentUser', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            ...userData
+          }));
+          
+          console.log("User logged in successfully:", user.uid);
+          window.location.href = "dashboard.html";
+        } else {
+          throw new Error("User data not found in database");
+        }
+        
+      } catch (error) {
+        console.error("Error logging in:", error);
+        
+        // Handle specific Firebase errors
+        let errorMessage = "An error occurred during login. Please try again.";
+        
+        switch (error.code) {
+          case 'auth/invalid-email':
+            errorMessage = "The email address is not valid.";
+            break;
+          case 'auth/user-disabled':
+            errorMessage = "This user account has been disabled.";
+            break;
+          case 'auth/user-not-found':
+            errorMessage = "No account found with this email address.";
+            break;
+          case 'auth/wrong-password':
+            errorMessage = "Incorrect password. Please try again.";
+            break;
+          default:
+            errorMessage = error.message || errorMessage;
+        }
+        
+        errorElement.textContent = errorMessage;
+        errorElement.style.display = 'block';
+      }
+    }
 
-
-     
-</script>
-
+    // Check if user is already logged in
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("User already logged in:", user.uid);
+        // Optional: Auto-redirect if already authenticated
+        // window.location.href = "dashboard.html";
+      }
+    });
+  </script>
 </body>
 </html>

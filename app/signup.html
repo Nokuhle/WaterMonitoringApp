@@ -42,11 +42,14 @@
         </div>
 
         <label class="checkbox">
-          <input type="checkbox" required />
+          <input type="checkbox" id="terms" required />
           I agree to the Terms & Conditions
         </label>
 
         <button type="submit">Create Account</button>
+        
+        <!-- Error message display -->
+        <div id="errorMessage" style="color: red; margin-top: 10px; display: none;"></div>
       </form>
     </div>
 
@@ -57,58 +60,114 @@
       <a href="login.html" class="switch-btn">Go to Login</a>
     </div>
   </div>
+  
   <script>
-     // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDCQo2LgeocOMZFtfh8d-y7sXxgLavshsY",
-    authDomain: "smartmanagementsystem-a2a2b.firebaseapp.com",
-    projectId: "smartmanagementsystem-a2a2b",
-    storageBucket: "smartmanagementsystem-a2a2b.firebasestorage.app",
-    messagingSenderId: "637822761779",
-    appId: "1:637822761779:web:0bf46abcecc3b6d7361c46",
-    measurementId: "G-BH6CHVNJND"
-  };
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDCQo2LgeocOMZFtfh8d-y7sXxgLavshsY",
+      authDomain: "smartmanagementsystem-a2a2b.firebaseapp.com",
+      projectId: "smartmanagementsystem-a2a2b",
+      storageBucket: "smartmanagementsystem-a2a2b.firebasestorage.app",
+      messagingSenderId: "637822761779",
+      appId: "1:637822761779:web:0bf46abcecc3b6d7361c46",
+      measurementId: "G-BH6CHVNJND"
+    };
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  
-  // Initialize Firebase services
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Firebase services
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-  async function handleSignup(event) {
-  event.preventDefault();
-  
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const fullName = document.getElementById('fullName').value;
-  const area = document.getElementById('area').value;
-  const userType = document.getElementById('userType').value;
-  
-  try {
-    // Create user with Firebase Authentication
-    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    const user = userCredential.user;
-    
-    // Save additional user data to Firestore
-    await db.collection('users').doc(user.uid).set({
-      name: fullName,
-      email: email,
-      area: area,
-      userType: userType,
-      memberCount: 1000, // Default value as per your schema
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    
-    // Redirect to dashboard after successful signup
-    window.location.href = "dashboard.html";
-    
-  } catch (error) {
-    console.error("Error signing up:", error);
-    alert(error.message);
-  }
-}
-    
-</script>
+    async function handleSignup(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const fullName = document.getElementById('fullName').value;
+      const area = document.getElementById('area').value;
+      const userType = document.getElementById('userType').value;
+      const termsAccepted = document.getElementById('terms').checked;
+      const errorElement = document.getElementById('errorMessage');
+      
+      // Reset error message
+      errorElement.style.display = 'none';
+      errorElement.textContent = '';
+      
+      // Basic validation
+      if (!termsAccepted) {
+        errorElement.textContent = "You must agree to the Terms & Conditions";
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      if (password.length < 6) {
+        errorElement.textContent = "Password must be at least 6 characters long";
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      try {
+        // Create user with Firebase Authentication
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+        
+        console.log("User created with UID:", user.uid);
+        
+        // Prepare user data for Firestore
+        const userData = {
+          name: fullName,
+          email: email,
+          area: area,
+          userType: userType,
+          memberCount: 1000, // Default value as per your schema
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Save additional user data to Firestore
+        await db.collection('users').doc(user.uid).set(userData);
+        
+        console.log("User data successfully stored in Firestore");
+        
+        // Store user data in localStorage
+        localStorage.setItem('currentUser', JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+          ...userData
+        }));
+        
+        // Redirect to dashboard after successful signup
+        window.location.href = "dashboard.html";
+        
+      } catch (error) {
+        console.error("Error signing up:", error);
+        
+        // Handle specific Firebase errors
+        let errorMessage = "An error occurred during signup. Please try again.";
+        
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = "This email is already registered. Please use a different email or sign in.";
+            break;
+          case 'auth/invalid-email':
+            errorMessage = "The email address is not valid.";
+            break;
+          case 'auth/operation-not-allowed':
+            errorMessage = "Email/password accounts are not enabled. Please contact support.";
+            break;
+          case 'auth/weak-password':
+            errorMessage = "The password is too weak. Please choose a stronger password.";
+            break;
+          default:
+            errorMessage = error.message || errorMessage;
+        }
+        
+        errorElement.textContent = errorMessage;
+        errorElement.style.display = 'block';
+      }
+    }
+  </script>
 </body>
 </html>
